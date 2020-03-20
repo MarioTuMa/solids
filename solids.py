@@ -177,15 +177,15 @@ def sphere(x,y,z,r):
     ident()
 
     for i in range(n):
-        roty(180/n)
-        p = parametricEllipsePoints(x,y,z,r)
+        rotx(180/n)
+        p = parametricEllipsePoints(0,0,0,r)
         matrixMult(transformMatrix,p)
         for i in range(len(p)):
-            addLine(p[i][0],p[i][1],p[i][2],p[i][0],p[i][1],p[i][2])
+            addLine(p[i][0]+x,p[i][1]+y,p[i][2]+z,p[i][0]+x,p[i][1]+y,p[i][2]+z)
     ident()
 
 def torus(x,y,z,r,R):
-    n = 100
+    n = 20
     finalPs = []
     ident()
 
@@ -195,7 +195,7 @@ def torus(x,y,z,r,R):
         matrixMult(transformMatrix,p)
         for i in range(len(p)):
             addLine(p[i][0],p[i][1],p[i][2],p[i][0],p[i][1],p[i][2])
-    ident()
+
 
 def matrixDraw():
     for i in range(len(lineMatrix)):
@@ -255,27 +255,22 @@ def addLine(x1,y1,z1,x2,y2,z2):
     lineMatrix.append([x1,y1,z1,1])
     lineMatrix.append([x2,y2,z2,1])
 
-def box(x,y,z,a,b,c):
-    #Near corner
+def box1(x,y,z,a,b,c):
     addLine(x,y,z,x+a,y,z)
     addLine(x,y,z,x,y+b,z)
     addLine(x,y,z,x,y,z+c)
-
     addLine(x+a,y,z,x+a,y+b,z)
     addLine(x+a,y,z,x+a,y,z+c)
     addLine(x,y+b,z,x+a,y+b,z)
     addLine(x,y+b,z,x,y+b,z+c)
     addLine(x,y,z+c,x,y+b,z+c)
     addLine(x,y,z+c,x+a,y,z+c)
-    # addLine(x+a,y,z,x+a,y,z+b)
-    # addLine(x,y+b,z,x+a,y+b,z)
-    # addLine(x,y+b,z,x,y+b,z+c)
-    # addLine(x,y,z+c,x,y+b,z+c)
-
-    #Far corner
     addLine(x+a,y,z+c,x+a,y+b,z+c)
     addLine(x,y+b,z+c,x+a,y+b,z+c)
     addLine(x+a,y+b,z,x+a,y+b,z+c)
+
+def box(x,y,z,a,b,c):
+    box1(x,y-b,z-c,a,b,c)
 
 def drawlines():
     i = 0
@@ -290,7 +285,10 @@ def display(name):
     fout = open(name,"w")
     fout.write("P3\n"+str(size)+" "+str(size)+"\n255\n")
     for i in range(size):
+        i = size - 1 - i
         for j in range(size):
+            #j = size - 1 - j
+
             fout.write(str(pixels[j][i][0])+" "+str(pixels[j][i][1])+" "+str(pixels[j][i][2])+" ")
             pixels[j][i]=[255,255,255]
         fout.write("\n")
